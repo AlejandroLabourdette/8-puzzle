@@ -58,10 +58,12 @@ def astar(start, goal):
     return None
 
 # --- usage -------------------------------------------------------------
-SLIDES_GOAL = (1,2,3, 8,0,4, 7,6,5)
-STANDARD_GOAL = (1,2,3, 4,5,6, 7,8,0)
-
-print(astar((2,8,3, 1,6,4, 7,0,5), SLIDES_GOAL))     # ['U','U','L','D','R']
+SLIDES_GOAL = (1,2,3, 
+               8,0,4, 
+               7,6,5)
+STANDARD_GOAL = (1,2,3, 
+                 4,5,6, 
+                 7,8,0)
 
 # Guaranteed-solvable test: scramble by legal moves from the goal
 def scramble(goal, n=40):
@@ -70,8 +72,11 @@ def scramble(goal, n=40):
         s = random.choice(list(successors(s)))[1]
     return s
 
-start = scramble(STANDARD_GOAL)
-print(start, astar(start, STANDARD_GOAL))
+if __name__ == "__main__":
+    print(astar((2,8,3, 1,6,4, 7,0,5), SLIDES_GOAL))     # ['U','U','L','D','R']
 
-# Swapping two tiles breaks parity -> unsolvable
-print(astar((2,1,3, 4,5,6, 7,8,0), STANDARD_GOAL))   # None
+    start = scramble(STANDARD_GOAL)
+    print(start, astar(start, STANDARD_GOAL))
+
+    # Swapping two tiles breaks parity -> unsolvable
+    print(astar((2,1,3, 4,5,6, 7,8,0), STANDARD_GOAL))   # None
