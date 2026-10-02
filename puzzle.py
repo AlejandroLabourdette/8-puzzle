@@ -4,6 +4,11 @@ PUZZLE_SIZE = 3
 SOLUTION = [[1,2,3],
             [8,0,4],
             [7,6,5]]
+# SOLUTION = [[ 1, 2, 3, 4],
+#             [12,13,14, 5],
+#             [11, 0,15, 6],
+#             [10, 9, 8, 7]]
+
 
 UP = 'U'
 DOWN = 'D'
@@ -136,9 +141,16 @@ if __name__ == "__main__":
         [1, 6, 4],
         [7, 0, 5]
     ]
+    # initial_board = [
+    #         [ 1, 2, 3, 4],
+    #         [12,13,14, 5],
+    #         [11,15, 6, 0],
+    #         [10, 9, 8, 7]
+    #     ]
+    
     exist_solution, solution_state = a_star(initial_board, trace=True)
     if exist_solution:
-        print("Solution found!")
+        print(f"Solution found!  Depth:{solution_state.g_score}")
     else:
         print("No solution found.")
 
