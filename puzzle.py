@@ -38,9 +38,21 @@ def is_solved(state):
                 return False    
     return True
 
-def a_star():
-    pending_states = []
+def heuristic(state):
+    # The number of misplaced tiles (excluding the blank tile)
+    misplaced_tiles = 0
+    for row in range(PUZZLE_SIZE):
+        for col in range(PUZZLE_SIZE):
+            if state[row][col] != 0 and state[row][col] != SOLUTION[row][col]:
+                misplaced_tiles += 1
+    return misplaced_tiles
+
+def a_star(initial_state):
+    pending_states = [initial_state]
     reviewed_states = []
+    level = {initial_state: 0}
+    cost = {initial_state: level[initial_state] + heuristic(initial_state)}
+
     def expand(node):
         pass
     pass

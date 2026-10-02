@@ -1,4 +1,4 @@
-from puzzle import get_valid_moves, is_solved
+from puzzle import get_valid_moves, is_solved, heuristic
 from puzzle import PUZZLE_SIZE, SOLUTION, UP, DOWN, LEFT, RIGHT
 from contextlib import redirect_stdout
 import sys
@@ -63,6 +63,15 @@ def test_is_solved():
     unsolved_state[0][0], unsolved_state[0][1] = unsolved_state[0][1], unsolved_state[0][0]
     check(is_solved(unsolved_state) == False, "is_solved(unsolved_state)")
 
+def test_heuristic():
+    # Test the heuristic function with a solved state
+    check(heuristic(SOLUTION) == 0, "heuristic(SOLUTION)")
+
+    # Test the heuristic function with an unsolved state
+    unsolved_state = [row[:] for row in SOLUTION]
+    unsolved_state[0][0], unsolved_state[0][1] = unsolved_state[0][1], unsolved_state[0][0]
+    check(heuristic(unsolved_state) == 2, "heuristic(unsolved_state)")
+
 class IndentedWriter:
     def __init__(self, stream):
         self.stream = stream
@@ -94,4 +103,8 @@ if __name__ == "__main__":
     print ("Running tests for is_solved()...")
     with redirect_stdout(IndentedWriter(sys.stdout)):
         test_is_solved()
+
+    print ("Running tests for heuristic()...")
+    with redirect_stdout(IndentedWriter(sys.stdout)):
+        test_heuristic()
         
