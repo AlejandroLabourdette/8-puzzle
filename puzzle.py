@@ -108,16 +108,15 @@ def a_star(initial_board):
                     or successor_state in pending_states):
                 pending_states.append(successor_state)
             else:
-                pass
+                if successor_state in pending_states:
+                    existing_equal_state = next(s for s in pending_states if s == successor_state)
+                    if successor_state.g_score < existing_equal_state.g_score:
+                        pending_states.remove(existing_equal_state)
+                        pending_states.append(successor_state)
 
     while len(pending_states) > 0:
         min_state = min(pending_states, key=lambda x: x.f_score())
+        if is_solved(min_state.board):
+            return True, min_state
         expand(min_state)
-
-
-        
-
-
-
-
-
+    return False, None
