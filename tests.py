@@ -1,4 +1,4 @@
-from puzzle import get_valid_moves, is_solved, heuristic
+from puzzle import get_valid_moves, is_solved, heuristic, successors, State
 from puzzle import PUZZLE_SIZE, SOLUTION, UP, DOWN, LEFT, RIGHT
 from contextlib import redirect_stdout
 import sys
@@ -55,22 +55,51 @@ def test_get_valid_moves():
             )
 
 def test_is_solved():
-    # Test the solved state
+    # test the solved state
     check(is_solved(SOLUTION) == True, "is_solved(SOLUTION)")
 
-    # Test an unsolved state
+    # test an unsolved state
     unsolved_state = [row[:] for row in SOLUTION]
     unsolved_state[0][0], unsolved_state[0][1] = unsolved_state[0][1], unsolved_state[0][0]
     check(is_solved(unsolved_state) == False, "is_solved(unsolved_state)")
 
 def test_heuristic():
-    # Test the heuristic function with a solved state
+    # test the heuristic function with a solved state
     check(heuristic(SOLUTION) == 0, "heuristic(SOLUTION)")
 
-    # Test the heuristic function with an unsolved state
-    unsolved_state = [row[:] for row in SOLUTION]
-    unsolved_state[0][0], unsolved_state[0][1] = unsolved_state[0][1], unsolved_state[0][0]
-    check(heuristic(unsolved_state) == 2, "heuristic(unsolved_state)")
+    # test the heuristic function with an unsolved state
+    unsolved_board = [row[:] for row in SOLUTION]
+    unsolved_board[0][0], unsolved_board[0][1] = unsolved_board[0][1], unsolved_board[0][0]
+    check(heuristic(unsolved_board) == 2, "heuristic(unsolved_board)")
+
+def test_successors():
+    initial_board = [
+        [row * PUZZLE_SIZE + col for col in range(PUZZLE_SIZE)]
+        for row in range(PUZZLE_SIZE)
+    ]
+    state = State(initial_board, 0, heuristic(initial_board), None)
+    successor_states = successors(state)
+
+    # check that the number of successors is correct
+    check(len(successor_states) == 2, "len(successors(state))")
+    # check that the moves are valid and lead to correct states
+    expected_moves = {DOWN, RIGHT}
+    actual_moves = {s.movement for s in successor_states}
+    check(actual_moves == expected_moves, "successors(state) moves")
+
+    initial_board = [
+        [row * PUZZLE_SIZE + col for col in range(PUZZLE_SIZE-1, -1, -1)]
+        for row in range(PUZZLE_SIZE-1, -1, -1)
+    ]
+    state = State(initial_board, 0, heuristic(initial_board), None)
+    successor_states = successors(state)
+
+    # check that the number of successors is correct
+    check(len(successor_states) == 2, "len(successors(state))")
+    # check that the moves are valid and lead to correct states
+    expected_moves = {UP, LEFT}
+    actual_moves = {s.movement for s in successor_states}
+    check(actual_moves == expected_moves, "successors(state) moves")
 
 class IndentedWriter:
     def __init__(self, stream):
@@ -107,4 +136,8 @@ if __name__ == "__main__":
     print ("Running tests for heuristic()...")
     with redirect_stdout(IndentedWriter(sys.stdout)):
         test_heuristic()
+
+    print ("Running tests for successors()...")
+    with redirect_stdout(IndentedWriter(sys.stdout)):
+        test_successors()
         
