@@ -9,11 +9,12 @@ RIGHT = 'R'
 LEFT = 'L'
 
 class State:
-    def __init__(self, board, g_score, h_score, movement):
+    def __init__(self, board, g_score, h_score, movement = None, parent = None):
         self.board = board
         self.g_score = g_score
         self.h_score = h_score
         self.movement = movement
+        self.parent = parent
 
     def f_score(self):
         return self.g_score + self.h_score
@@ -79,21 +80,28 @@ def successors(state: State):
         elif move == RIGHT:
             new_board[blank_row][blank_col], new_board[blank_row][blank_col + 1] = new_board[blank_row][blank_col + 1], new_board[blank_row][blank_col]
 
-        successor_states.append(State(new_board, state.g_score + 1, heuristic(new_board), move))
+        successor_states.append(State(new_board, state.g_score + 1, heuristic(new_board), move, state))
 
     return successor_states
 
 def a_star(initial_board):
-    initial_state = State(initial_board, 0, heuristic(initial_board), None)
+    initial_state = State(initial_board, 0, heuristic(initial_board))
     pending_states = [initial_state]
     reviewed_states = []
 
     def expand(state):
         pending_states.remove(state)
         reviewed_states.append(state)
+        successor_states = successors(state)
+        for successor_state in successor_states:
+            if not (successor_state in reviewed_states 
+                    or successor_state in pending_states):
+                pending_states.append(successor_state)
+            else:
+                pass
 
     while len(pending_states) > 0:
-        min_state = min(pending_states, key=lambda x: x.g_score + x.h_score)
+        min_state = min(pending_states, key=lambda x: x.f_score)
         expand(min_state)
 
 
