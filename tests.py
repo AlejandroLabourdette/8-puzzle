@@ -101,6 +101,27 @@ def test_successors():
     actual_moves = {s.movement for s in successor_states}
     check(actual_moves == expected_moves, "successors(state) moves")
 
+def test_state_equality():
+    board = [row[:] for row in SOLUTION]
+    same_board = [row[:] for row in SOLUTION]
+    other_board = [row[:] for row in SOLUTION]
+    other_board[0][0], other_board[0][1] = other_board[0][1], other_board[0][0]
+
+    base = State(board, 0, heuristic(board))
+    # same board reached through a different path
+    twin = State(same_board, 5, heuristic(same_board), UP, base)
+    different = State(other_board, 0, heuristic(other_board))
+
+    check(base == twin, "states with equal boards are equal")
+    check(not (base == different), "states with different boards are not equal")
+    check(base != different, "states with different boards compare as !=")
+    check(twin in [different, base], "state is found in a list by board equality")
+    check(different not in [base], "state is not found when no board matches")
+    check(not (base == "not a state"), "state does not equal a non-state")
+    check(hash(base) == hash(twin), "states with equal boards share a hash")
+    check(len({base, twin}) == 1, "equal states collapse in a set")
+
+
 class IndentedWriter:
     def __init__(self, stream):
         self.stream = stream
@@ -140,4 +161,8 @@ if __name__ == "__main__":
     print ("Running tests for successors()...")
     with redirect_stdout(IndentedWriter(sys.stdout)):
         test_successors()
+
+    print ("Running tests for State equality...")
+    with redirect_stdout(IndentedWriter(sys.stdout)):
+        test_state_equality()
         

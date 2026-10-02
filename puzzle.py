@@ -19,6 +19,16 @@ class State:
     def f_score(self):
         return self.g_score + self.h_score
 
+    def __eq__(self, other):
+        # Two states are the same graph node when their boards match cell by cell,
+        # regardless of the path (scores, movement, parent) that led to them.
+        if not isinstance(other, State):
+            return NotImplemented
+        return self.board == other.board
+
+    def __hash__(self):
+        return hash(tuple(tuple(row) for row in self.board))
+
 def get_valid_moves(row,col):
     if row == 0:
         if col == 0:
@@ -101,7 +111,7 @@ def a_star(initial_board):
                 pass
 
     while len(pending_states) > 0:
-        min_state = min(pending_states, key=lambda x: x.f_score)
+        min_state = min(pending_states, key=lambda x: x.f_score())
         expand(min_state)
 
 
