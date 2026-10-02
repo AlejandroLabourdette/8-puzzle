@@ -1,5 +1,5 @@
-from puzzle import get_valid_moves
-from puzzle import PUZZLE_SIZE, UP, DOWN, LEFT, RIGHT
+from puzzle import get_valid_moves, is_solved
+from puzzle import PUZZLE_SIZE, SOLUTION, UP, DOWN, LEFT, RIGHT
 from contextlib import redirect_stdout
 import sys
 
@@ -54,6 +54,15 @@ def test_get_valid_moves():
                 f"get_valid_moves({row}, {col})",
             )
 
+def test_is_solved():
+    # Test the solved state
+    check(is_solved(SOLUTION) == True, "is_solved(SOLUTION)")
+
+    # Test an unsolved state
+    unsolved_state = [row[:] for row in SOLUTION]
+    unsolved_state[0][0], unsolved_state[0][1] = unsolved_state[0][1], unsolved_state[0][0]
+    check(is_solved(unsolved_state) == False, "is_solved(unsolved_state)")
+
 class IndentedWriter:
     def __init__(self, stream):
         self.stream = stream
@@ -81,4 +90,8 @@ if __name__ == "__main__":
     print("Running tests for get_valid_moves()...")
     with redirect_stdout(IndentedWriter(sys.stdout)):
         test_get_valid_moves()
-    print("All tests passed!")
+
+    print ("Running tests for is_solved()...")
+    with redirect_stdout(IndentedWriter(sys.stdout)):
+        test_is_solved()
+        
