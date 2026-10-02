@@ -120,3 +120,25 @@ def a_star(initial_board):
             return True, min_state
         expand(min_state)
     return False, None
+
+
+
+if __name__ == "__main__":
+    # Example usage
+    initial_board = [
+        [2, 8, 3],
+        [1, 6, 4],
+        [7, 0, 5]
+    ]
+    exist_solution, solution_state = a_star(initial_board)
+    if exist_solution:
+        print("Solution found!")
+        print("Moves to solve:", solution_state.g_score)
+        print("Final board state:")
+        for row in solution_state.board:
+            print(row)
+    else:
+        print("No solution found.")
+
+
+
