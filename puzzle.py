@@ -1,3 +1,5 @@
+from tree_printer import print_search_tree
+
 PUZZLE_SIZE = 3
 SOLUTION = [[1,2,3],
             [8,0,4],
@@ -94,7 +96,7 @@ def successors(state: State):
 
     return successor_states
 
-def a_star(initial_board):
+def a_star(initial_board, trace = False):
     initial_state = State(initial_board, 0, heuristic(initial_board))
     pending_states = [initial_state]
     reviewed_states = []
@@ -114,14 +116,18 @@ def a_star(initial_board):
                         pending_states.remove(existing_equal_state)
                         pending_states.append(successor_state)
 
+    iteration = 0
     while len(pending_states) > 0:
+        iteration += 1
         min_state = min(pending_states, key=lambda x: x.f_score())
+        if trace:
+            # Drawing before the solved check means the last frame shows the solution.
+            trace = print_search_tree(initial_state, reviewed_states, pending_states,
+                                      min_state, iteration)
         if is_solved(min_state.board):
             return True, min_state
         expand(min_state)
     return False, None
-
-
 
 if __name__ == "__main__":
     # Example usage
@@ -130,13 +136,9 @@ if __name__ == "__main__":
         [1, 6, 4],
         [7, 0, 5]
     ]
-    exist_solution, solution_state = a_star(initial_board)
+    exist_solution, solution_state = a_star(initial_board, trace=True)
     if exist_solution:
         print("Solution found!")
-        print("Moves to solve:", solution_state.g_score)
-        print("Final board state:")
-        for row in solution_state.board:
-            print(row)
     else:
         print("No solution found.")
 
