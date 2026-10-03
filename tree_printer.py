@@ -13,8 +13,8 @@ LAST_PREFIX = "    "
 MIDDLE_PREFIX = "│   "
 
 def format_board(board) -> str:
-    # [[2,8,3],[1,6,4],[7,0,5]] becomes "283|164|705"
-    return "|".join("".join(str(tile) for tile in row) for row in board)
+    # [[2,8,3],[1,6,4],[7,0,5]] becomes "2,8,3|1,6,4|7,0,5"
+    return "|".join(",".join(str(tile) for tile in row) for row in board)
 
 def format_node(state) -> str:
     movement = state.movement if state.movement is not None else "-"

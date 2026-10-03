@@ -130,16 +130,16 @@ def a_star(initial_board, trace = False):
             trace = print_search_tree(initial_state, reviewed_states, pending_states,
                                       min_state, iteration)
         if is_solved(min_state.board):
-            return True, min_state
+            return True, min_state, len(pending_states), len(reviewed_states)
         expand(min_state)
-    return False, None
+    return False, None, 0, 0
 
 if __name__ == "__main__":
     # Example usage
     initial_board = [
-        [2, 8, 3],
-        [1, 6, 4],
-        [7, 0, 5]
+        [2, 1, 6],
+        [4, 0, 8],
+        [7, 5, 3]
     ]
     # initial_board = [
     #         [ 1, 2, 3, 4],
@@ -148,9 +148,9 @@ if __name__ == "__main__":
     #         [10, 9, 8, 7]
     #     ]
     
-    exist_solution, solution_state = a_star(initial_board, trace=True)
+    exist_solution, solution_state, p_size, r_size = a_star(initial_board, trace=False)
     if exist_solution:
-        print(f"Solution found!  Depth:{solution_state.g_score}")
+        print(f"Solution found!  Depth:{solution_state.g_score}, Pending:{p_size}, Reviewed:{r_size}")
     else:
         print("No solution found.")
 
